@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { AIConsultant } from '@/components/ui/AIConsultant'
 import { 
   BarChart3, 
   Brain, 
@@ -200,6 +201,9 @@ export default function Home() {
           </Card>
         </div>
       </section>
+      
+      {/* AI Consultant */}
+      <AIConsultant />
     </div>
   )
 }
