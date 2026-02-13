@@ -65,8 +65,8 @@ export async function createCourse(courseData: {
   instructorId: string
 }) {
   const { rows } = await pool.query(
-    `INSERT INTO courses (id, title, slug, description, "shortDescription", image, level, price, duration, "instructorId") 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+    `INSERT INTO courses (id, title, slug, description, "shortDescription", image, level, price, duration, "instructorId", "createdAt", "updatedAt") 
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
      RETURNING *`,
     [
       courseData.id,
@@ -85,9 +85,8 @@ export async function createCourse(courseData: {
 }
 
 export async function getAllCourses(published = true) {
-  const query = published 
-    ? 'SELECT c.*, u.name as instructor_name FROM courses c JOIN users u ON c."instructorId" = u.id WHERE c.published = true ORDER BY c."createdAt" DESC'
-    : 'SELECT c.*, u.name as instructor_name FROM courses c JOIN users u ON c."instructorId" = u.id ORDER BY c."createdAt" DESC'
+  // Simplified query without published filter for now
+  const query = 'SELECT c.*, u.name as instructor_name, u.bio as instructor_bio, u.image as instructor_image FROM courses c JOIN users u ON c."instructorId" = u.id ORDER BY c."createdAt" DESC'
   
   const { rows } = await pool.query(query)
   return rows
