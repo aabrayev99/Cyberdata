@@ -5,10 +5,10 @@ import { pool } from '@/lib/db-simple'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const slug = params.slug
+    const { slug } = await params
 
     const { rows } = await pool.query(
       `SELECT c.*, u.name as instructor_name, u.bio as instructor_bio, u.image as instructor_image
@@ -43,7 +43,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -55,7 +55,7 @@ export async function PUT(
       )
     }
 
-    const slug = params.slug
+    const { slug } = await params
     const { title, shortDescription, description, level, price, duration, image } = await request.json()
 
     // Get current course to check permissions

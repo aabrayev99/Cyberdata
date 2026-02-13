@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
       }
       
       // Периодически обновляем роль из базы данных
-      if (token.id && (!token.lastRefresh || Date.now() - token.lastRefresh > 5 * 60 * 1000)) {
+      if (token.id && (!token.lastRefresh || Date.now() - (token.lastRefresh as number) > 5 * 60 * 1000)) {
         try {
           const { findUserById } = await import('./db-simple')
           const userData = await findUserById(token.id as string)
@@ -85,8 +85,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: '/auth/signin',
-    signUp: '/auth/signup'
+    signIn: '/auth/signin'
   },
   secret: process.env.NEXTAUTH_SECRET
 }
