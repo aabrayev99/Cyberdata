@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth.config'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,26 +51,19 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-
-    // Generate unique filename
-    const timestamp = Date.now()
-    const fileExtension = path.extname(file.name)
-    const fileName = `${type}-${timestamp}-${Math.random().toString(36).substr(2)}${fileExtension}`
-
-    // Create directory structure
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', type)
-    try {
-      await mkdir(uploadDir, { recursive: true })
-    } catch (error) {
-      // Directory might already exist
-    }
-
-    // Save file
-    const filePath = path.join(uploadDir, fileName)
-    await writeFile(filePath, buffer)
-
-    // Return URL
-    const fileUrl = `/uploads/${type}/${fileName}`
+    
+    // Convert to base64 for temporary storage solution
+    const base64 = buffer.toString('base64')
+    const dataUrl = `data:${file.type};base64,${base64}`
+    
+    // For now, return the data URL (this is a temporary solution)
+    // In production, you would upload to a cloud storage service like:
+    // - Vercel Blob Storage
+    // - AWS S3
+    // - Cloudinary
+    // - etc.
+    
+    const fileUrl = dataUrl
 
     return NextResponse.json({
       success: true,
